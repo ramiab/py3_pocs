@@ -28,40 +28,40 @@ class BaseQ():
         self.l=[]
 
 class MainQ(BaseQ):
-    def __init__(self, helper_q):
+    def __init__(self, min_q):
         super().__init__()
-        self.helper_q = helper_q
+        self.min_q = min_q
 
     def enqueue(self, x):
         super().enqueue(x)
-        if self.helper_q.empty():
-            self.helper_q.enqueue(x)
-        elif x > self.helper_q.peek_last():
-            self.helper_q.enqueue(x)
-        else: # x <= self.helper_q.peek_last():
-            self.helper_q.clear()
-            self.helper_q.enqueue(x)
+        if self.min_q.empty():
+            self.min_q.enqueue(x)
+        elif x > self.min_q.peek_last():
+            self.min_q.enqueue(x)
+        else: # x <= self.min_q.peek_last():
+            self.min_q.clear()
+            self.min_q.enqueue(x)
 
     def dequeue(self):
         if self.empty():
             raise EmptyQueueException("Queue is empty")
         x = super().dequeue()
-        if x == self.helper_q.peek_first():
-            self.helper_q.dequeue()
+        if x == self.min_q.peek_first():
+            self.min_q.dequeue()
         return x
 
     def get_min(self):
         if self.empty():
             raise EmptyQueueException("Queue is empty, NO minimum")
-        return self.helper_q.peek_first()
+        return self.min_q.peek_first()
 
 INPUT_NUMS = (("+", 5), ("+", 10), ("+", 3), ("+", 6), ("+", 1), ("+", 2), ("+", 4), ("+", -4), ("+", 100), ("+", -40),
               ("-",None), ("-",None), ("-",None), ("+",-400), ("+",90), ("-",None),
               ("-",None), ("-",None), ("-",None), ("-",None), ("-",None), ("-",None), ("-",None), ("-",None))
 
 if __name__ == '__main__':
-    helper_q = BaseQ()
-    main_q = MainQ(helper_q)
+    min_q = BaseQ()
+    main_q = MainQ(min_q)
 
     try:
         for operator, i in INPUT_NUMS:
@@ -69,13 +69,13 @@ if __name__ == '__main__':
                 main_q.enqueue(i)
                 print("Added {} ; Min is: {}".format(i,main_q.get_min()))
                 print("main_q = {}".format(main_q.l))
-                print("help_q = {}".format(main_q.helper_q.l))
+                print("min_q = {}".format(main_q.min_q.l))
                 print("==========")
             else:
                 x = main_q.dequeue()
                 print("Removed {} ; Min is: {}".format(x,main_q.get_min()))
                 print("main_q = {}".format(main_q.l))
-                print("help_q = {}".format(main_q.helper_q.l))
+                print("min_q = {}".format(main_q.min_q.l))
                 print("==========")
     except Exception as e:
         print("exception: {}".format(e))
